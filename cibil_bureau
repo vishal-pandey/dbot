@@ -1,0 +1,213 @@
+-- Create customers table
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_type VARCHAR(20) NOT NULL, -- 'individual' or 'business'
+    full_name VARCHAR(255) NOT NULL,
+    date_of_birth DATE, -- for individuals
+    pan_number VARCHAR(20) UNIQUE, -- Unique identifier (PAN for individuals, GST for businesses)
+    business_name VARCHAR(255), -- only for businesses
+    address TEXT NOT NULL,
+    phone_number VARCHAR(20),
+    email VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create financial_institutions table
+CREATE TABLE financial_institutions (
+    institution_id INT PRIMARY KEY AUTO_INCREMENT,
+    institution_name VARCHAR(255) NOT NULL,
+    institution_type VARCHAR(100), -- e.g., 'Bank', 'NBFC', 'Credit Union'
+    address TEXT,
+    contact_number VARCHAR(20),
+    email VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create credit_accounts table
+CREATE TABLE credit_accounts (
+    account_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL, -- Make sure this is an INT to match the customers table
+    institution_id INT NOT NULL,
+    account_type VARCHAR(50) NOT NULL, -- e.g., 'loan', 'credit card'
+    account_number VARCHAR(50) UNIQUE NOT NULL,
+    credit_limit DECIMAL(15, 2), -- for credit cards
+    loan_amount DECIMAL(15, 2), -- for loans
+    outstanding_balance DECIMAL(15, 2) NOT NULL,
+    account_status VARCHAR(50) NOT NULL, -- e.g., 'active', 'closed', 'defaulted'
+    opened_date DATE NOT NULL,
+    closed_date DATE, -- nullable for active accounts
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (institution_id) REFERENCES financial_institutions(institution_id) ON DELETE CASCADE
+);
+
+-- Create payments table
+CREATE TABLE payments (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    payment_date DATE NOT NULL,
+    payment_amount DECIMAL(15, 2) NOT NULL,
+    status VARCHAR(50) NOT NULL, -- e.g., 'paid', 'late', 'missed'
+    FOREIGN KEY (account_id) REFERENCES credit_accounts(account_id) ON DELETE CASCADE
+);
+
+-- Create credit_scores table
+CREATE TABLE credit_scores (
+    score_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL, -- Ensure this matches customers table data type
+    credit_score INT CHECK (credit_score BETWEEN 300 AND 900),
+    score_date DATE NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+);
+
+-- Create credit_reports table
+CREATE TABLE credit_reports (
+    report_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL, -- Ensure this matches customers table data type
+    report_date DATE NOT NULL,
+    report_data TEXT, -- JSON or text data storing details of the report
+    credit_score INT,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+);
+
+-- Create public_records table
+CREATE TABLE public_records (
+    record_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL, -- Ensure this matches customers table data type
+    record_type VARCHAR(50) NOT NULL, -- e.g., 'bankruptcy', 'court_judgment'
+    record_details TEXT NOT NULL,
+    record_date DATE NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+);
+
+-- Create disputes table
+CREATE TABLE disputes (
+    dispute_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL, -- Ensure this matches customers table data type
+    account_id INT,
+    dispute_description TEXT NOT NULL,
+    status VARCHAR(50) DEFAULT 'open', -- 'open', 'resolved'
+    filed_date DATE NOT NULL,
+    resolved_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (account_id) REFERENCES credit_accounts(account_id) ON DELETE CASCADE
+);
+
+-- Create loan_collateral table
+CREATE TABLE loan_collateral (
+    collateral_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    collateral_type VARCHAR(100), -- e.g., 'real estate', 'vehicle'
+    collateral_value DECIMAL(15, 2),
+    FOREIGN KEY (account_id) REFERENCES credit_accounts(account_id) ON DELETE CASCADE
+);
+
+-- Create institution_reports table
+CREATE TABLE institution_reports (
+    report_id INT PRIMARY KEY AUTO_INCREMENT,
+    institution_id INT NOT NULL, -- Ensure this matches financial_institutions table data type
+    customer_id INT NOT NULL, -- Ensure this matches customers table data type
+    account_id INT NOT NULL, -- Ensure this matches credit_accounts table data type
+    report_data TEXT NOT NULL, -- JSON or text data storing report details
+    report_date DATE NOT NULL,
+    FOREIGN KEY (institution_id) REFERENCES financial_institutions(institution_id) ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (account_id) REFERENCES credit_accounts(account_id) ON DELETE CASCADE
+);
+
+
+
+
+-- Insert sample data into customers table
+INSERT INTO customers (customer_type, full_name, date_of_birth, pan_number, business_name, address, phone_number, email)
+VALUES 
+('individual', 'John Doe', '1985-05-12', 'ABC1234X', NULL, '123 Main St, City A', '9999999999', 'john.doe@example.com'),
+('individual', 'Jane Smith', '1990-07-24', 'DEF5678Y', NULL, '456 Oak Ave, City B', '8888888888', 'jane.smith@example.com'),
+('business', 'N/A', NULL, 'XYZ4567P', 'Tech Corp', '789 Pine Blvd, City C', '7777777777', 'contact@techcorp.com'),
+('individual', 'Mike Johnson', '1975-09-15', 'GHI8901Z', NULL, '321 Maple St, City D', '6666666666', 'mike.johnson@example.com'),
+('business', 'N/A', NULL, 'JKL2345Q', 'Foodies Inc', '987 Elm Dr, City E', '5555555555', 'contact@foodies.com'),
+('individual', 'Emily Davis', '1982-01-25', 'LMN3456R', NULL, '654 Cedar Ave, City F', '4444444444', 'emily.davis@example.com'),
+('individual', 'David Wilson', '1995-12-05', 'OPQ5678T', NULL, '567 Spruce St, City G', '3333333333', 'david.wilson@example.com'),
+('business', 'N/A', NULL, 'UVW7890U', 'Finance Ltd', '789 Birch Rd, City H', '2222222222', 'contact@financeltd.com');
+
+-- Insert sample data into financial_institutions table
+INSERT INTO financial_institutions (institution_name, institution_type, address, contact_number, email)
+VALUES
+('Bank of A', 'Bank', '123 Bank St, City A', '9999999991', 'contact@bankofa.com'),
+('NBFC One', 'NBFC', '456 NBFC Ave, City B', '8888888882', 'contact@nbfcone.com'),
+('Credit Union C', 'Credit Union', '789 Union Rd, City C', '7777777773', 'contact@creditunionc.com'),
+('Bank of D', 'Bank', '321 Bank St, City D', '6666666664', 'contact@bankofd.com'),
+('NBFC Two', 'NBFC', '987 NBFC Blvd, City E', '5555555555', 'contact@nbfctwo.com'),
+('Bank of F', 'Bank', '654 Bank Rd, City F', '4444444446', 'contact@bankoff.com');
+
+-- Insert sample data into credit_accounts table
+INSERT INTO credit_accounts (customer_id, institution_id, account_type, account_number, credit_limit, loan_amount, outstanding_balance, account_status, opened_date, closed_date)
+VALUES
+(1, 1, 'credit card', 'CC1234567890', 100000, NULL, 45000, 'active', '2020-05-01', NULL),
+(2, 2, 'loan', 'LN1234567890', NULL, 500000, 150000, 'active', '2018-03-15', NULL),
+(3, 3, 'loan', 'LN0987654321', NULL, 3000000, 1000000, 'active', '2019-09-20', NULL),
+(4, 4, 'credit card', 'CC0987654321', 150000, NULL, 60000, 'active', '2021-01-10', NULL),
+(5, 5, 'loan', 'LN5678901234', NULL, 750000, 350000, 'active', '2017-06-25', NULL),
+(6, 6, 'credit card', 'CC5678901234', 120000, NULL, 80000, 'active', '2019-11-15', NULL),
+(7, 1, 'loan', 'LN6789012345', NULL, 450000, 150000, 'closed', '2015-04-20', '2020-12-10'),
+(8, 2, 'credit card', 'CC6789012345', 200000, NULL, 75000, 'active', '2022-03-05', NULL);
+
+-- Insert sample data into payments table
+INSERT INTO payments (account_id, payment_date, payment_amount, status)
+VALUES
+(1, '2023-01-10', 10000, 'paid'),
+(1, '2023-02-10', 10000, 'paid'),
+(2, '2023-01-05', 20000, 'paid'),
+(2, '2023-02-05', 20000, 'late'),
+(3, '2023-01-15', 50000, 'paid'),
+(4, '2023-01-20', 5000, 'paid'),
+(5, '2023-01-25', 15000, 'late'),
+(6, '2023-01-30', 20000, 'paid');
+
+-- Insert sample data into credit_scores table
+INSERT INTO credit_scores (customer_id, credit_score, score_date)
+VALUES
+(1, 750, '2023-08-01'),
+(2, 680, '2023-08-01'),
+(3, 720, '2023-08-01'),
+(4, 800, '2023-08-01'),
+(5, 650, '2023-08-01'),
+(6, 770, '2023-08-01'),
+(7, 690, '2023-08-01'),
+(8, 820, '2023-08-01');
+
+-- Insert sample data into credit_reports table
+INSERT INTO credit_reports (customer_id, report_date, report_data, credit_score)
+VALUES
+(1, '2023-08-01', '{"details": "Credit report for John Doe", "accounts": [{"type": "credit card", "status": "active"}]}', 750),
+(2, '2023-08-01', '{"details": "Credit report for Jane Smith", "accounts": [{"type": "loan", "status": "active"}]}', 680),
+(3, '2023-08-01', '{"details": "Credit report for Tech Corp", "accounts": [{"type": "loan", "status": "active"}]}', 720),
+(4, '2023-08-01', '{"details": "Credit report for Mike Johnson", "accounts": [{"type": "credit card", "status": "active"}]}', 800),
+(5, '2023-08-01', '{"details": "Credit report for Foodies Inc", "accounts": [{"type": "loan", "status": "active"}]}', 650);
+
+-- Insert sample data into public_records table
+INSERT INTO public_records (customer_id, record_type, record_details, record_date)
+VALUES
+(2, 'bankruptcy', 'Declared bankruptcy in 2015', '2015-05-10'),
+(5, 'court_judgment', 'Court judgment for non-payment of loan in 2018', '2018-10-05');
+
+-- Insert sample data into disputes table
+INSERT INTO disputes (customer_id, account_id, dispute_description, status, filed_date, resolved_date)
+VALUES
+(1, 1, 'Dispute over late payment report', 'resolved', '2023-02-15', '2023-03-01'),
+(3, 3, 'Incorrect loan amount', 'open', '2023-07-10', NULL);
+
+-- Insert sample data into loan_collateral table
+INSERT INTO loan_collateral (account_id, collateral_type, collateral_value)
+VALUES
+(3, 'real estate', 2000000),
+(5, 'vehicle', 300000);
+
+-- Insert sample data into institution_reports table
+INSERT INTO institution_reports (institution_id, customer_id, account_id, report_data, report_date)
+VALUES
+(1, 1, 1, '{"update": "Payment made on 2023-02-10"}', '2023-02-11'),
+(2, 2, 2, '{"update": "Late payment on 2023-02-05"}', '2023-02-06'),
+(3, 3, 3, '{"update": "Loan installment paid on 2023-01-15"}', '2023-01-16'),
+(4, 4, 4, '{"update": "Credit card payment on 2023-01-20"}', '2023-01-21'),
+(5, 5, 5, '{"update": "Late loan payment on 2023-01-25"}', '2023-01-26');

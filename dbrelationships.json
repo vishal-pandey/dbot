@@ -1,0 +1,669 @@
+{
+    "relationships": [
+      {
+        "fromTable": "classification",
+        "columns": ["id"],
+        "toTable": "tag",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Tags are categorized under classifications." 
+      },
+      {
+        "fromTable": "classification",
+        "columns": ["id"],
+        "toTable": "glossary_term_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Glossary terms can be classified under classifications."
+      },
+      {
+        "fromTable": "tag",
+        "columns": ["id"],
+        "toTable": "tag_usage",
+        "relatedColumns": ["tagFQNHash"],
+        "relationshipType": "one-to-many",
+        "description": "The usage of tags is tracked across different entities."
+      },
+      {
+        "fromTable": "tag",
+        "columns": ["id"],
+        "toTable": "classification",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Tags are grouped under one or more classifications."
+      },
+      {
+        "fromTable": "tag_usage",
+        "columns": ["tagFQNHash"],
+        "toTable": "tag",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks where and how tags are used."
+      },
+      {
+        "fromTable": "tag_usage",
+        "columns": ["targetFQNHash"],
+        "toTable": "table_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tags are used to classify and describe tables in the metadata system."
+      },
+      {
+        "fromTable": "tag_usage",
+        "columns": ["targetFQNHash"],
+        "toTable": "column_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tags are used to classify and describe columns in the metadata system."
+      },
+      {
+        "fromTable": "glossary_entity",
+        "columns": ["id"],
+        "toTable": "glossary_term_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Glossary terms belong to a parent glossary."
+      },
+      {
+        "fromTable": "glossary_term_entity",
+        "columns": ["id"],
+        "toTable": "classification",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Glossary terms can be categorized under classifications."
+      },
+      {
+        "fromTable": "glossary_term_entity",
+        "columns": ["fqnHash"],
+        "toTable": "tag_usage",
+        "relatedColumns": ["targetFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Glossary terms can be applied to metadata entities through tags."
+      },
+      {
+        "fromTable": "table_entity",
+        "columns": ["fqnHash"],
+        "toTable": "tag_usage",
+        "relatedColumns": ["targetFQNHash"],
+        "relationshipType": "one-to-many",
+        "description": "Tags are used to categorize and describe tables."
+      },
+      {
+        "fromTable": "column_entity",
+        "columns": ["fqnHash"],
+        "toTable": "tag_usage",
+        "relatedColumns": ["targetFQNHash"],
+        "relationshipType": "one-to-many",
+        "description": "Tags are used to categorize and describe columns."
+      },
+      {
+        "fromTable": "test_case",
+        "columns": ["id"],
+        "toTable": "test_definition",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Each test case is based on a test definition that defines the logic and parameters for the test."
+      },
+      {
+        "fromTable": "test_case",
+        "columns": ["id"],
+        "toTable": "test_suite",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "A test case can belong to a test suite, grouping it with other related test cases."
+      },
+      {
+        "fromTable": "test_case",
+        "columns": ["entityFQN"],
+        "toTable": "table_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "The entityFQN in test_case links to various metadata entities such as table_entity to specify what the test case is validating."
+      },
+      {
+        "fromTable": "test_definition",
+        "columns": ["id"],
+        "toTable": "test_case",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "A test definition can be linked to multiple test cases, as it defines the logic applied to different entities."
+      },
+      {
+        "fromTable": "test_definition",
+        "columns": ["entityType"],
+        "toTable": "table_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "The entityType in test_definition references different entity types indicating what kind of metadata entities the test applies to."
+      },
+      {
+        "fromTable": "test_suite",
+        "columns": ["id"],
+        "toTable": "test_case",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "A test suite groups multiple test cases together for execution."
+      },
+      {
+        "fromTable": "test_suite",
+        "columns": ["id"],
+        "toTable": "test_definition",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-many",
+        "description": "A test suite can be associated with multiple test definitions to define the scope of the suite."
+      },
+      {
+        "fromTable": "test_connection_definition",
+        "columns": ["fullyQualifiedName"],
+        "toTable": "test_case",
+        "relatedColumns": ["entityFQN"],
+        "relationshipType": "one-to-many",
+        "description": "A test case might reference a test_connection_definition if it needs specific connection details to be executed."
+      },
+      {
+        "fromTable": "test_connection_definition",
+        "columns": ["fullyQualifiedName"],
+        "toTable": "pipeline_service_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "The fullyQualifiedName in test_connection_definition might reference specific services or data sources that the connection is targeting."
+      },
+      {
+        "fromTable": "dbservice_entity",
+        "columns": ["id"],
+        "toTable": "database_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Each database service can manage multiple databases."
+      },
+      {
+        "fromTable": "dbservice_entity",
+        "columns": ["name"],
+        "toTable": "database_entity",
+        "relatedColumns": ["name"],
+        "relationshipType": "one-to-one",
+        "description": "The service name in dbservice_entity is linked to the database it manages."
+      },
+      {
+        "fromTable": "dashboard_service_entity",
+        "columns": ["id"],
+        "toTable": "dashboard_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Each dashboard service can manage multiple dashboards."
+      },
+      {
+        "fromTable": "dashboard_service_entity",
+        "columns": ["name"],
+        "toTable": "dashboard_entity",
+        "relatedColumns": ["name"],
+        "relationshipType": "one-to-one",
+        "description": "The service name in dashboard_service_entity is linked to the dashboards it manages."
+      },
+      {
+        "fromTable": "pipeline_service_entity",
+        "columns": ["id"],
+        "toTable": "pipeline_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Each pipeline service can manage multiple pipelines."
+      },
+      {
+        "fromTable": "pipeline_service_entity",
+        "columns": ["name"],
+        "toTable": "pipeline_entity",
+        "relatedColumns": ["name"],
+        "relationshipType": "one-to-one",
+        "description": "The service name in pipeline_service_entity is linked to the pipelines it manages."
+      },
+      {
+        "fromTable": "messaging_service_entity",
+        "columns": ["id"],
+        "toTable": "topic_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Each messaging service can manage multiple topics."
+      },
+      {
+        "fromTable": "messaging_service_entity",
+        "columns": ["name"],
+        "toTable": "topic_entity",
+        "relatedColumns": ["name"],
+        "relationshipType": "one-to-one",
+        "description": "The service name in messaging_service_entity is linked to the topics it manages."
+      },
+      {
+        "fromTable": "storage_service_entity",
+        "columns": ["id"],
+        "toTable": "storage_container_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Each storage service can manage multiple storage containers."
+      },
+      {
+        "fromTable": "storage_service_entity",
+        "columns": ["name"],
+        "toTable": "storage_container_entity",
+        "relatedColumns": ["name"],
+        "relationshipType": "one-to-one",
+        "description": "The service name in storage_service_entity is linked to the storage containers it manages."
+      },
+      {
+        "fromTable": "mlmodel_service_entity",
+        "columns": ["id"],
+        "toTable": "ml_model_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Each ML model service can manage multiple machine learning models."
+      },
+      {
+        "fromTable": "mlmodel_service_entity",
+        "columns": ["name"],
+        "toTable": "ml_model_entity",
+        "relatedColumns": ["name"],
+        "relationshipType": "one-to-one",
+        "description": "The service name in mlmodel_service_entity is linked to the machine learning models it manages."
+      },
+      {
+        "fromTable": "metadata_service_entity",
+        "columns": ["id"],
+        "toTable": "table_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "Each metadata service can manage multiple tables."
+      },
+      {
+        "fromTable": "metadata_service_entity",
+        "columns": ["name"],
+        "toTable": "table_entity",
+        "relatedColumns": ["name"],
+        "relationshipType": "one-to-one",
+        "description": "The service name in metadata_service_entity is linked to the tables it manages."
+      },
+      {
+        "fromTable": "entity_relationship",
+        "columns": ["fromId"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["toId"],
+        "relationshipType": "many-to-many",
+        "description": "Defines relationships between two entities. Each relationship connects one entity (fromId) to another (toId). The relation column defines the type of relationship."
+      },
+      {
+        "fromTable": "entity_relationship",
+        "columns": ["fromId"],
+        "toTable": "database_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "A database entity can have relationships with other entities, such as tables or other databases."
+      },
+      {
+        "fromTable": "entity_relationship",
+        "columns": ["fromId"],
+        "toTable": "table_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "A table entity can have relationships with other tables, databases, or other related entities."
+      },
+      {
+        "fromTable": "entity_relationship",
+        "columns": ["fromId"],
+        "toTable": "dashboard_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "A dashboard entity can have relationships with other dashboards, pipelines, or related entities."
+      },
+      {
+        "fromTable": "entity_relationship",
+        "columns": ["fromId"],
+        "toTable": "pipeline_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "A pipeline entity can have relationships with other pipelines, tables, or related entities."
+      },
+      {
+        "fromTable": "entity_relationship",
+        "columns": ["fromId"],
+        "toTable": "glossary_term_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "A glossary term entity can have relationships with other glossary terms, glossary entities, or related metadata entities."
+      },
+      {
+        "fromTable": "entity_relationship",
+        "columns": ["fromId"],
+        "toTable": "user_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "A user entity can have relationships with other entities, such as roles, teams, or assigned tasks."
+      },
+      {
+        "fromTable": "entity_relationship",
+        "columns": ["fromId"],
+        "toTable": "role_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "A role entity can have relationships with user entities, permissions, or teams."
+      },
+      {
+        "fromTable": "entity_relationship",
+        "columns": ["fromId"],
+        "toTable": "team_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "A team entity can have relationships with users, roles, and other teams."
+      },
+      {
+        "fromTable": "entity_extension",
+        "columns": ["id"],
+        "toTable": "database_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a database entity with additional attributes or information."
+      },
+      {
+        "fromTable": "entity_extension",
+        "columns": ["id"],
+        "toTable": "table_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a table entity with additional attributes or information."
+      },
+      {
+        "fromTable": "entity_extension",
+        "columns": ["id"],
+        "toTable": "dashboard_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a dashboard entity with additional attributes or information."
+      },
+      {
+        "fromTable": "entity_extension",
+        "columns": ["id"],
+        "toTable": "pipeline_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a pipeline entity with additional attributes or information."
+      },
+      {
+        "fromTable": "entity_extension",
+        "columns": ["id"],
+        "toTable": "ml_model_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of an ML model entity with additional attributes or information."
+      },
+      {
+        "fromTable": "entity_extension_time_series",
+        "columns": ["entityFQNHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Captures time-series data related to an entity's extension, tracking changes or additions over time."
+      },
+      {
+        "fromTable": "entity_extension_time_series",
+        "columns": ["entityFQNHash"],
+        "toTable": "table_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a table entity's metadata."
+      },
+      {
+        "fromTable": "entity_extension_time_series",
+        "columns": ["entityFQNHash"],
+        "toTable": "database_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a database entity's metadata."
+      },
+      {
+        "fromTable": "entity_extension_time_series",
+        "columns": ["entityFQNHash"],
+        "toTable": "dashboard_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a dashboard entity's metadata."
+      },
+      {
+        "fromTable": "entity_extension_time_series",
+        "columns": ["entityFQNHash"],
+        "toTable": "pipeline_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a pipeline entity's metadata."
+      },
+      {
+        "fromTable": "entity_extension_time_series",
+        "columns": ["entityFQNHash"],
+        "toTable": "ml_model_entity",
+        "relatedColumns": ["fqnHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of an ML model entity's metadata."
+      },
+      {
+        "fromTable": "database_entity",
+        "columns": ["id"],
+        "toTable": "table_entity",
+        "relatedColumns": ["id"],
+        "relationshipType": "one-to-many",
+        "description": "A database entity can manage multiple table entities. Each table belongs to a specific database."
+      },
+      {
+        "fromTable": "database_entity",
+        "columns": ["id"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["fromId"],
+        "relationshipType": "many-to-one",
+        "description": "Database entities can have relationships with other entities through the entity_relationship table."
+      },
+      {
+        "fromTable": "database_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Extends the metadata of a database entity with additional attributes or custom information."
+      },
+      {
+        "fromTable": "database_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension_time_series",
+        "relatedColumns": ["entityFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a database entity's metadata."
+      },
+      {
+        "fromTable": "table_entity",
+        "columns": ["id"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["fromId"],
+        "relationshipType": "many-to-one",
+        "description": "Table entities can have relationships with other tables, databases, or related entities through the entity_relationship table."
+      },
+      {
+        "fromTable": "table_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a table entity with additional attributes or information."
+      },
+      {
+        "fromTable": "table_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension_time_series",
+        "relatedColumns": ["entityFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a table entity's metadata."
+      },
+      {
+        "fromTable": "dashboard_entity",
+        "columns": ["id"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["fromId"],
+        "relationshipType": "many-to-one",
+        "description": "Dashboard entities can have relationships with other dashboards, pipelines, or related entities through the entity_relationship table."
+      },
+      {
+        "fromTable": "dashboard_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a dashboard entity with additional attributes or information."
+      },
+      {
+        "fromTable": "dashboard_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension_time_series",
+        "relatedColumns": ["entityFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a dashboard entity's metadata."
+      },
+      {
+        "fromTable": "pipeline_entity",
+        "columns": ["id"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["fromId"],
+        "relationshipType": "many-to-one",
+        "description": "Pipeline entities can have relationships with other pipelines, tables, or related entities through the entity_relationship table."
+      },
+      {
+        "fromTable": "pipeline_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a pipeline entity with additional attributes or information."
+      },
+      {
+        "fromTable": "pipeline_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension_time_series",
+        "relatedColumns": ["entityFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a pipeline entity's metadata."
+      },
+      {
+        "fromTable": "data_product_entity",
+        "columns": ["id"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["fromId"],
+        "relationshipType": "many-to-one",
+        "description": "Data product entities can have relationships with other entities such as databases, tables, or pipelines through the entity_relationship table."
+      },
+      {
+        "fromTable": "data_product_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a data product entity with additional attributes or information."
+      },
+      {
+        "fromTable": "data_product_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension_time_series",
+        "relatedColumns": ["entityFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a data product entity's metadata."
+      },
+      {
+        "fromTable": "domain_entity",
+        "columns": ["id"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["fromId"],
+        "relationshipType": "many-to-one",
+        "description": "Domain entities can have relationships with other domains, entities such as databases, tables, or dashboards through the entity_relationship table."
+      },
+      {
+        "fromTable": "domain_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a domain entity with additional attributes or information."
+      },
+      {
+        "fromTable": "domain_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension_time_series",
+        "relatedColumns": ["entityFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a domain entity's metadata."
+      },
+      {
+        "fromTable": "storage_container_entity",
+        "columns": ["id"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["fromId"],
+        "relationshipType": "many-to-one",
+        "description": "Storage container entities can have relationships with other storage containers or related entities through the entity_relationship table."
+      },
+      {
+        "fromTable": "storage_container_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a storage container entity with additional attributes or information."
+      },
+      {
+        "fromTable": "storage_container_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension_time_series",
+        "relatedColumns": ["entityFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a storage container entity's metadata."
+      },
+      {
+        "fromTable": "report_entity",
+        "columns": ["id"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["fromId"],
+        "relationshipType": "many-to-one",
+        "description": "Report entities can have relationships with other reports, dashboards, or related entities through the entity_relationship table."
+      },
+      {
+        "fromTable": "report_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a report entity with additional attributes or information."
+      },
+      {
+        "fromTable": "report_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension_time_series",
+        "relatedColumns": ["entityFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a report entity's metadata."
+      },
+      {
+        "fromTable": "topic_entity",
+        "columns": ["id"],
+        "toTable": "entity_relationship",
+        "relatedColumns": ["fromId"],
+        "relationshipType": "many-to-one",
+        "description": "Topic entities can have relationships with other topics, messaging services, or related entities through the entity_relationship table."
+      },
+      {
+        "fromTable": "topic_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension",
+        "relatedColumns": ["id"],
+        "relationshipType": "many-to-one",
+        "description": "Allows extending the metadata of a topic entity with additional attributes or information."
+      },
+      {
+        "fromTable": "topic_entity",
+        "columns": ["fqnHash"],
+        "toTable": "entity_extension_time_series",
+        "relatedColumns": ["entityFQNHash"],
+        "relationshipType": "many-to-one",
+        "description": "Tracks time-series data related to the extension of a topic entity's metadata."
+      }
+    ]
+}
+

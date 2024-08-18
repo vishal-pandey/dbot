@@ -1,0 +1,2535 @@
+{
+    "database": "openmetadata",
+    "tables": [
+      {
+        "name": "database_entity",
+        "properties": {
+          "description": "Stores metadata about different databases, including their unique identifiers and names."
+        },
+        "refSql": "select * from database_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "database_id",
+            "properties": {
+              "description": "Unique identifier for the database entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "database_name",
+            "properties": {
+              "description": "Name of the database."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "database_metadata",
+            "properties": {
+              "description": "JSON metadata containing details about the database entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "database_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the database entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "database_updated_by",
+            "properties": {
+              "description": "User who last updated the database entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "database_deleted",
+            "properties": {
+              "description": "Flag indicating whether the database entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "database_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the database's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "table_entity",
+        "properties": {
+          "description": "Stores metadata about different tables within the databases, including their unique identifiers, names, and associated JSON metadata. For all the queries related to tables this should be used."
+        },
+        "refSql": "select * from table_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "table_id",
+            "properties": {
+              "description": "Unique identifier for the table entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "table_name",
+            "properties": {
+              "description": "The name of the table, used to identify it within the system."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "table_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the table entity.",
+              "structure": {
+                "id": {
+                  "description": "Unique identifier of the table."
+                },
+                "name": {
+                  "description": "Name of the table."
+                },
+                "votes": {
+                  "description": "Voting details for the table, including upVotes and downVotes."
+                },
+                "columns": [
+                  {
+                    "name": {
+                      "description": "Name of the column."
+                    },
+                    "dataType": {
+                      "description": "Data type of the column."
+                    },
+                    "constraint": {
+                      "description": "Constraint on the column (e.g., NOT NULL)."
+                    },
+                    "dataLength": {
+                      "description": "Length of the data type."
+                    },
+                    "dataTypeDisplay": {
+                      "description": "Display format of the data type."
+                    },
+                    "fullyQualifiedName": {
+                      "description": "Fully qualified name of the column."
+                    }
+                  }
+                ],
+                "deleted": {
+                  "description": "Indicates whether the table has been deleted."
+                },
+                "version": {
+                  "description": "Version of the table schema."
+                },
+                "database": {
+                  "id": {
+                    "description": "Unique identifier of the database."
+                  },
+                  "name": {
+                    "description": "Name of the database."
+                  },
+                  "type": {
+                    "description": "Type of the database (e.g., MySQL)."
+                  },
+                  "deleted": {
+                    "description": "Indicates whether the database has been deleted."
+                  },
+                  "displayName": {
+                    "description": "Display name of the database."
+                  },
+                  "fullyQualifiedName": {
+                    "description": "Fully qualified name of the database."
+                  }
+                },
+                "tableType": {
+                  "description": "Type of the table (e.g., Regular)."
+                },
+                "updatedAt": {
+                  "description": "Timestamp of the last update."
+                },
+                "updatedBy": {
+                  "description": "User who last updated the table."
+                },
+                "sourceHash": {
+                  "description": "Hash value of the table source."
+                },
+                "serviceType": {
+                  "description": "Type of the database service (e.g., MySQL)."
+                },
+                "databaseSchema": {
+                  "id": {
+                    "description": "Unique identifier of the database schema."
+                  },
+                  "name": {
+                    "description": "Name of the database schema."
+                  },
+                  "type": {
+                    "description": "Type of the database schema."
+                  },
+                  "deleted": {
+                    "description": "Indicates whether the database schema has been deleted."
+                  },
+                  "displayName": {
+                    "description": "Display name of the database schema."
+                  },
+                  "fullyQualifiedName": {
+                    "description": "Fully qualified name of the database schema."
+                  }
+                },
+                "schemaDefinition": {
+                  "description": "SQL statement defining the table schema."
+                },
+                "tableConstraints": [
+                  {
+                    "columns": {
+                      "description": "List of columns involved in the constraint."
+                    },
+                    "constraintType": {
+                      "description": "Type of constraint (e.g., FOREIGN_KEY)."
+                    },
+                    "referredColumns": {
+                      "description": "Columns that are referenced by the constraint."
+                    }
+                  }
+                ],
+                "changeDescription": {
+                  "fieldsAdded": [
+                    {
+                      "name": {
+                        "description": "Name of the added field."
+                      },
+                      "newValue": {
+                        "description": "New value of the added field."
+                      }
+                    }
+                  ],
+                  "fieldsDeleted": {
+                    "description": "List of fields deleted from the table schema."
+                  },
+                  "fieldsUpdated": {
+                    "description": "List of fields updated in the table schema."
+                  },
+                  "previousVersion": {
+                    "description": "Previous version of the table schema."
+                  }
+                },
+                "fullyQualifiedName": {
+                  "description": "Fully qualified name of the table."
+                }
+              }
+              
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "table_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the table entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "table_updated_by",
+            "properties": {
+              "description": "User who last updated the table entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "table_deleted",
+            "properties": {
+              "description": "Flag indicating whether the table entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "table_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the table's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "profiler_data_time_series",
+        "properties": {
+          "description": "Stores profiling data for entities, including entity identifiers, JSON schema, and profiling data. Profiler data should be used to answer questions related to the actual data of the entities like row count, comparision about the entities strengths etc.",
+          "refSql": "select * from profiler_data_time_series"
+        },
+        "columns": [
+          {
+            "name": "entityFQNHash",
+            "type": "VARCHAR(768)",
+            "notNull": true,
+            "expression": "entity_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the entity's fully qualified name."
+            }
+          },
+          {
+            "name": "extension",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "extension",
+            "properties": {
+              "description": "The extension used to identify the type of profiling data (e.g., custom extensions)."
+            }
+          },
+          {
+            "name": "jsonSchema",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "json_schema",
+            "properties": {
+              "description": "Schema of the JSON data for the profiling entity."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "profiler_data",
+            "properties": {
+              "description": "JSON data containing the profile information related to the entity.",
+              "structure": {
+                "rowCount": {
+                  "description": "Number of rows in the table at the time of profiling."
+                },
+                "columnProfiles": [
+                  {
+                    "name": {
+                      "description": "Name of the column."
+                    },
+                    "dataType": {
+                      "description": "Data type of the column."
+                    },
+                    "nullCount": {
+                      "description": "Number of null values in the column."
+                    },
+                    "distinctCount": {
+                      "description": "Number of distinct values in the column."
+                    },
+                    "minValue": {
+                      "description": "Minimum value found in the column."
+                    },
+                    "maxValue": {
+                      "description": "Maximum value found in the column."
+                    },
+                    "mean": {
+                      "description": "Mean value of the column (if applicable)."
+                    },
+                    "stdDev": {
+                      "description": "Standard deviation of the column's values."
+                    },
+                    "histogram": {
+                      "description": "Histogram data representing the distribution of the column's values."
+                    }
+                  }
+                ],
+                "executionTime": {
+                  "description": "Timestamp indicating the time of the profiling operation."
+                },
+                "entityVersion": {
+                  "description": "Version of the entity being profiled."
+                }
+              }
+            }
+          },
+          {
+            "name": "operation",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "operation",
+            "properties": {
+              "description": "The operation that generated this profiling data, typically a virtual generated column."
+            }
+          },
+          {
+            "name": "timestamp",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "profile_timestamp",
+            "properties": {
+              "description": "Timestamp of the profiling data generation, typically a virtual generated column."
+            }
+          }
+        ],
+        "primaryKey": "entityFQNHash",
+        "indexes": [
+          {
+            "name": "IDX_entityFQNHash",
+            "columns": ["entityFQNHash"]
+          },
+          {
+            "name": "IDX_extension",
+            "columns": ["extension"]
+          }
+        ]
+      },      
+      {
+        "name": "dashboard_entity",
+        "properties": {
+          "description": "Stores metadata about dashboards within the system, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from dashboard_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "dashboard_id",
+            "properties": {
+              "description": "Unique identifier for the dashboard entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "dashboard_name",
+            "properties": {
+              "description": "The name of the dashboard."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "dashboard_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the dashboard entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "dashboard_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the dashboard entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "dashboard_updated_by",
+            "properties": {
+              "description": "User who last updated the dashboard entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "dashboard_deleted",
+            "properties": {
+              "description": "Flag indicating whether the dashboard entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "dashboard_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the dashboard's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "pipeline_entity",
+        "properties": {
+          "description": "Stores metadata about pipelines, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from pipeline_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "pipeline_id",
+            "properties": {
+              "description": "Unique identifier for the pipeline entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "pipeline_name",
+            "properties": {
+              "description": "The name of the pipeline."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "pipeline_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the pipeline entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "pipeline_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the pipeline entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "pipeline_updated_by",
+            "properties": {
+              "description": "User who last updated the pipeline entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "pipeline_deleted",
+            "properties": {
+              "description": "Flag indicating whether the pipeline entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "pipeline_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the pipeline's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "data_product_entity",
+        "properties": {
+          "description": "Stores metadata about data products, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from data_product_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "data_product_id",
+            "properties": {
+              "description": "Unique identifier for the data product entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "data_product_name",
+            "properties": {
+              "description": "The name of the data product."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "data_product_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the data product entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "data_product_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the data product entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "data_product_updated_by",
+            "properties": {
+              "description": "User who last updated the data product entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "data_product_deleted",
+            "properties": {
+              "description": "Flag indicating whether the data product entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "data_product_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the data product's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "domain_entity",
+        "properties": {
+          "description": "Stores metadata about domains, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from domain_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "domain_id",
+            "properties": {
+              "description": "Unique identifier for the domain entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "domain_name",
+            "properties": {
+              "description": "The name of the domain."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "domain_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the domain entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "domain_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the domain entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "domain_updated_by",
+            "properties": {
+              "description": "User who last updated the domain entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "domain_deleted",
+            "properties": {
+              "description": "Flag indicating whether the domain entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "domain_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the domain's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "storage_container_entity",
+        "properties": {
+          "description": "Stores metadata about storage containers, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from storage_container_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "storage_container_id",
+            "properties": {
+              "description": "Unique identifier for the storage container entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "storage_container_name",
+            "properties": {
+              "description": "The name of the storage container."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "storage_container_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the storage container entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "storage_container_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the storage container entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "storage_container_updated_by",
+            "properties": {
+              "description": "User who last updated the storage container entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "storage_container_deleted",
+            "properties": {
+              "description": "Flag indicating whether the storage container entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "storage_container_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the storage container's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "report_entity",
+        "properties": {
+          "description": "Stores metadata about reports, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from report_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "report_id",
+            "properties": {
+              "description": "Unique identifier for the report entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "report_name",
+            "properties": {
+              "description": "The name of the report."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "report_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the report entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "report_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the report entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "report_updated_by",
+            "properties": {
+              "description": "User who last updated the report entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "report_deleted",
+            "properties": {
+              "description": "Flag indicating whether the report entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "report_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the report's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "topic_entity",
+        "properties": {
+          "description": "Stores metadata about topics, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from topic_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "topic_id",
+            "properties": {
+              "description": "Unique identifier for the topic entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "topic_name",
+            "properties": {
+              "description": "The name of the topic."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "topic_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the topic entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "topic_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the topic entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "topic_updated_by",
+            "properties": {
+              "description": "User who last updated the topic entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "topic_deleted",
+            "properties": {
+              "description": "Flag indicating whether the topic entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "topic_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the topic's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "dbservice_entity",
+        "properties": {
+          "description": "Stores metadata about database services, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from dbservice_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "dbservice_id",
+            "properties": {
+              "description": "Unique identifier for the database service entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "dbservice_name",
+            "properties": {
+              "description": "The name of the database service."
+            }
+          },
+          {
+            "name": "serviceType",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "dbservice_type",
+            "properties": {
+              "description": "The type of the database service, e.g., MySQL, PostgreSQL."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "dbservice_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the database service entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "dbservice_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the database service entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "dbservice_updated_by",
+            "properties": {
+              "description": "User who last updated the database service entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "dbservice_deleted",
+            "properties": {
+              "description": "Flag indicating whether the database service entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "dbservice_name_hash",
+            "properties": {
+              "description": "Hashed value of the database service's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "dashboard_service_entity",
+        "properties": {
+          "description": "Stores metadata about dashboard services, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from dashboard_service_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "dashboard_service_id",
+            "properties": {
+              "description": "Unique identifier for the dashboard service entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "dashboard_service_name",
+            "properties": {
+              "description": "The name of the dashboard service."
+            }
+          },
+          {
+            "name": "serviceType",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "dashboard_service_type",
+            "properties": {
+              "description": "The type of the dashboard service, e.g., Tableau, PowerBI."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "dashboard_service_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the dashboard service entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "dashboard_service_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the dashboard service entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "dashboard_service_updated_by",
+            "properties": {
+              "description": "User who last updated the dashboard service entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "dashboard_service_deleted",
+            "properties": {
+              "description": "Flag indicating whether the dashboard service entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "dashboard_service_name_hash",
+            "properties": {
+              "description": "Hashed value of the dashboard service's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "pipeline_service_entity",
+        "properties": {
+          "description": "Stores metadata about pipeline services, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from pipeline_service_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "pipeline_service_id",
+            "properties": {
+              "description": "Unique identifier for the pipeline service entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "pipeline_service_name",
+            "properties": {
+              "description": "The name of the pipeline service."
+            }
+          },
+          {
+            "name": "serviceType",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "pipeline_service_type",
+            "properties": {
+              "description": "The type of the pipeline service, e.g., Airflow, Prefect."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "pipeline_service_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the pipeline service entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "pipeline_service_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the pipeline service entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "pipeline_service_updated_by",
+            "properties": {
+              "description": "User who last updated the pipeline service entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "pipeline_service_deleted",
+            "properties": {
+              "description": "Flag indicating whether the pipeline service entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "pipeline_service_name_hash",
+            "properties": {
+              "description": "Hashed value of the pipeline service's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "messaging_service_entity",
+        "properties": {
+          "description": "Stores metadata about messaging services, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from messaging_service_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "messaging_service_id",
+            "properties": {
+              "description": "Unique identifier for the messaging service entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "messaging_service_name",
+            "properties": {
+              "description": "The name of the messaging service."
+            }
+          },
+          {
+            "name": "serviceType",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "messaging_service_type",
+            "properties": {
+              "description": "The type of the messaging service, e.g., Kafka, Pulsar."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "messaging_service_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the messaging service entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "messaging_service_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the messaging service entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "messaging_service_updated_by",
+            "properties": {
+              "description": "User who last updated the messaging service entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "messaging_service_deleted",
+            "properties": {
+              "description": "Flag indicating whether the messaging service entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "messaging_service_name_hash",
+            "properties": {
+              "description": "Hashed value of the messaging service's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "storage_service_entity",
+        "properties": {
+          "description": "Stores metadata about storage services, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from storage_service_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "storage_service_id",
+            "properties": {
+              "description": "Unique identifier for the storage service entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "storage_service_name",
+            "properties": {
+              "description": "The name of the storage service."
+            }
+          },
+          {
+            "name": "serviceType",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "storage_service_type",
+            "properties": {
+              "description": "The type of the storage service, e.g., S3, GCS."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "storage_service_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the storage service entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "storage_service_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the storage service entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "storage_service_updated_by",
+            "properties": {
+              "description": "User who last updated the storage service entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "storage_service_deleted",
+            "properties": {
+              "description": "Flag indicating whether the storage service entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "storage_service_name_hash",
+            "properties": {
+              "description": "Hashed value of the storage service's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "mlmodel_service_entity",
+        "properties": {
+          "description": "Stores metadata about machine learning model services, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from mlmodel_service_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "mlmodel_service_id",
+            "properties": {
+              "description": "Unique identifier for the ML model service entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "mlmodel_service_name",
+            "properties": {
+              "description": "The name of the ML model service."
+            }
+          },
+          {
+            "name": "serviceType",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "mlmodel_service_type",
+            "properties": {
+              "description": "The type of the ML model service."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "mlmodel_service_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the ML model service entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "mlmodel_service_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the ML model service entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "mlmodel_service_updated_by",
+            "properties": {
+              "description": "User who last updated the ML model service entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "mlmodel_service_deleted",
+            "properties": {
+              "description": "Flag indicating whether the ML model service entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "mlmodel_service_name_hash",
+            "properties": {
+              "description": "Hashed value of the ML model service's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "metadata_service_entity",
+        "properties": {
+          "description": "Stores metadata about metadata services, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from metadata_service_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "metadata_service_id",
+            "properties": {
+              "description": "Unique identifier for the metadata service entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "metadata_service_name",
+            "properties": {
+              "description": "The name of the metadata service."
+            }
+          },
+          {
+            "name": "serviceType",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "metadata_service_type",
+            "properties": {
+              "description": "The type of the metadata service."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "metadata_service_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the metadata service entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "metadata_service_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the metadata service entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "metadata_service_updated_by",
+            "properties": {
+              "description": "User who last updated the metadata service entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "metadata_service_deleted",
+            "properties": {
+              "description": "Flag indicating whether the metadata service entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "metadata_service_name_hash",
+            "properties": {
+              "description": "Hashed value of the metadata service's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "entity_relationship",
+        "properties": {
+          "description": "Manages relationships between different metadata entities, such as associations between tables, databases, and other entities."
+        },
+        "refSql": "select * from entity_relationship",
+        "columns": [
+          {
+            "name": "fromId",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "relationship_from_id",
+            "properties": {
+              "description": "The identifier of the source entity in the relationship."
+            }
+          },
+          {
+            "name": "toId",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "relationship_to_id",
+            "properties": {
+              "description": "The identifier of the target entity in the relationship."
+            }
+          },
+          {
+            "name": "fromEntity",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "relationship_from_entity",
+            "properties": {
+              "description": "The type of the source entity in the relationship."
+            }
+          },
+          {
+            "name": "toEntity",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "relationship_to_entity",
+            "properties": {
+              "description": "The type of the target entity in the relationship."
+            }
+          },
+          {
+            "name": "relation",
+            "type": "TINYINT",
+            "notNull": true,
+            "expression": "relationship_type",
+            "properties": {
+              "description": "Indicates the type of relationship between the source and target entities."
+            }
+          },
+          {
+            "name": "jsonSchema",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "relationship_json_schema",
+            "properties": {
+              "description": "Schema defining the JSON structure for this relationship."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": false,
+            "expression": "relationship_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the entity relationship."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": true,
+            "expression": "relationship_deleted",
+            "properties": {
+              "description": "Flag indicating whether the relationship is deleted."
+            }
+          }
+        ],
+        "primaryKey": ["fromId", "toId", "relation"]
+      },
+      {
+        "name": "entity_extension",
+        "properties": {
+          "description": "Stores extended attributes for metadata entities, allowing for additional customizable metadata to be stored."
+        },
+        "refSql": "select * from entity_extension",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "extension_id",
+            "properties": {
+              "description": "Unique identifier for the entity extension."
+            }
+          },
+          {
+            "name": "extension",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "extension_name",
+            "properties": {
+              "description": "Name of the extension being added to the entity."
+            }
+          },
+          {
+            "name": "jsonSchema",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "extension_json_schema",
+            "properties": {
+              "description": "Schema defining the JSON structure for this extension."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "extension_metadata",
+            "properties": {
+              "description": "JSON data containing the extended metadata for the entity."
+            }
+          }
+        ],
+        "primaryKey": ["id", "extension"]
+      },
+      {
+        "name": "entity_extension_time_series",
+        "properties": {
+          "description": "Stores time-series data for entity extensions, allowing tracking of changes over time."
+        },
+        "refSql": "select * from entity_extension_time_series",
+        "columns": [
+          {
+            "name": "extension",
+            "type": "VARCHAR(100)",
+            "notNull": false,
+            "expression": "time_series_extension",
+            "properties": {
+              "description": "Name of the extension being tracked over time."
+            }
+          },
+          {
+            "name": "jsonSchema",
+            "type": "VARCHAR(50)",
+            "notNull": false,
+            "expression": "time_series_json_schema",
+            "properties": {
+              "description": "Schema defining the JSON structure for the time-series data."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "time_series_metadata",
+            "properties": {
+              "description": "JSON data containing the time-series metadata for the entity."
+            }
+          },
+          {
+            "name": "timestamp",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "time_series_timestamp",
+            "properties": {
+              "description": "Timestamp when the time-series data was recorded."
+            }
+          },
+          {
+            "name": "entityFQNHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "time_series_entity_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the entity's fully qualified name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": ["entityFQNHash", "extension", "timestamp"]
+      },
+      {
+        "name": "classification",
+        "properties": {
+          "description": "Stores classification metadata, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from classification",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "classification_id",
+            "properties": {
+              "description": "Unique identifier for the classification entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "classification_name",
+            "properties": {
+              "description": "The name of the classification."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "classification_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the classification entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "classification_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the classification entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "classification_updated_by",
+            "properties": {
+              "description": "User who last updated the classification entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "classification_deleted",
+            "properties": {
+              "description": "Flag indicating whether the classification entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "classification_name_hash",
+            "properties": {
+              "description": "Hashed value of the classification's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "tag",
+        "properties": {
+          "description": "Stores tag metadata, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from tag",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "tag_id",
+            "properties": {
+              "description": "Unique identifier for the tag entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "tag_name",
+            "properties": {
+              "description": "The name of the tag."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "tag_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the tag entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "tag_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the tag entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "tag_updated_by",
+            "properties": {
+              "description": "User who last updated the tag entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "tag_deleted",
+            "properties": {
+              "description": "Flag indicating whether the tag entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "tag_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the tag's fully qualified name."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "tag_usage",
+        "properties": {
+          "description": "Tracks usage of tags across various entities, including details on label type, state, and associated tags."
+        },
+        "refSql": "select * from tag_usage",
+        "columns": [
+          {
+            "name": "source",
+            "type": "TINYINT",
+            "notNull": true,
+            "expression": "tag_usage_source",
+            "properties": {
+              "description": "Source of the tag usage, represented as an integer."
+            }
+          },
+          {
+            "name": "tagFQN",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "tag_usage_tag_fqn",
+            "properties": {
+              "description": "Fully qualified name of the tag being used."
+            }
+          },
+          {
+            "name": "labelType",
+            "type": "TINYINT",
+            "notNull": true,
+            "expression": "tag_usage_label_type",
+            "properties": {
+              "description": "Type of label assigned to the tag."
+            }
+          },
+          {
+            "name": "state",
+            "type": "TINYINT",
+            "notNull": true,
+            "expression": "tag_usage_state",
+            "properties": {
+              "description": "State of the tag usage, represented as an integer."
+            }
+          },
+          {
+            "name": "tagFQNHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "tag_usage_tag_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the tag's fully qualified name for uniqueness."
+            }
+          },
+          {
+            "name": "targetFQNHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "tag_usage_target_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the target entity's fully qualified name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": ["source", "tagFQNHash", "targetFQNHash"]
+      },
+      {
+        "name": "glossary_entity",
+        "properties": {
+          "description": "Stores metadata about glossaries, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from glossary_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "glossary_id",
+            "properties": {
+              "description": "Unique identifier for the glossary entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "glossary_name",
+            "properties": {
+              "description": "The name of the glossary."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "glossary_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the glossary entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "glossary_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the glossary entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "glossary_updated_by",
+            "properties": {
+              "description": "User who last updated the glossary entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "glossary_deleted",
+            "properties": {
+              "description": "Flag indicating whether the glossary entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "glossary_name_hash",
+            "properties": {
+              "description": "Hashed value of the glossary's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "glossary_term_entity",
+        "properties": {
+          "description": "Stores metadata about glossary terms, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from glossary_term_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "glossary_term_id",
+            "properties": {
+              "description": "Unique identifier for the glossary term entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "glossary_term_name",
+            "properties": {
+              "description": "The name of the glossary term."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "glossary_term_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the glossary term entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "glossary_term_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the glossary term entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "glossary_term_updated_by",
+            "properties": {
+              "description": "User who last updated the glossary term entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "glossary_term_deleted",
+            "properties": {
+              "description": "Flag indicating whether the glossary term entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "glossary_term_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the glossary term's fully qualified name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "test_case",
+        "properties": {
+          "description": "Stores information about individual test cases, including unique identifiers, names, and associated metadata."
+        },
+        "refSql": "select * from test_case",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "test_case_id",
+            "properties": {
+              "description": "Unique identifier for the test case entity."
+            }
+          },
+          {
+            "name": "entityFQN",
+            "type": "VARCHAR(1024)",
+            "notNull": true,
+            "expression": "test_case_entity_fqn",
+            "properties": {
+              "description": "Fully qualified name of the entity associated with the test case."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "test_case_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the test case entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "test_case_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the test case entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "test_case_updated_by",
+            "properties": {
+              "description": "User who last updated the test case entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "test_case_deleted",
+            "properties": {
+              "description": "Flag indicating whether the test case entity is deleted."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "test_case_name",
+            "properties": {
+              "description": "The name of the test case."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "test_case_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the test case's fully qualified name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "test_definition",
+        "properties": {
+          "description": "Stores definitions for tests, including supported data types and associated metadata."
+        },
+        "refSql": "select * from test_definition",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "test_definition_id",
+            "properties": {
+              "description": "Unique identifier for the test definition entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "test_definition_name",
+            "properties": {
+              "description": "The name of the test definition."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "test_definition_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the test definition entity."
+            }
+          },
+          {
+            "name": "entityType",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "test_definition_entity_type",
+            "properties": {
+              "description": "Type of entity associated with the test definition."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "test_definition_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the test definition entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "test_definition_updated_by",
+            "properties": {
+              "description": "User who last updated the test definition entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "test_definition_deleted",
+            "properties": {
+              "description": "Flag indicating whether the test definition entity is deleted."
+            }
+          },
+          {
+            "name": "supported_data_types",
+            "type": "JSON",
+            "notNull": false,
+            "expression": "test_definition_supported_data_types",
+            "properties": {
+              "description": "JSON array containing supported data types for the test definition."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "test_definition_name_hash",
+            "properties": {
+              "description": "Hashed value of the test definition's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "test_suite",
+        "properties": {
+          "description": "Stores information about test suites, including unique identifiers, names, and associated metadata."
+        },
+        "refSql": "select * from test_suite",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "test_suite_id",
+            "properties": {
+              "description": "Unique identifier for the test suite entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "test_suite_name",
+            "properties": {
+              "description": "The name of the test suite."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "test_suite_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the test suite entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "test_suite_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the test suite entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "test_suite_updated_by",
+            "properties": {
+              "description": "User who last updated the test suite entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "test_suite_deleted",
+            "properties": {
+              "description": "Flag indicating whether the test suite entity is deleted."
+            }
+          },
+          {
+            "name": "fqnHash",
+            "type": "VARCHAR(768)",
+            "notNull": false,
+            "expression": "test_suite_fqn_hash",
+            "properties": {
+              "description": "Hashed value of the test suite's fully qualified name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "test_connection_definition",
+        "properties": {
+          "description": "Stores definitions for test connections, including metadata and fully qualified names."
+        },
+        "refSql": "select * from test_connection_definition",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "test_connection_definition_id",
+            "properties": {
+              "description": "Unique identifier for the test connection definition entity."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "test_connection_definition_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the test connection definition entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "test_connection_definition_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the test connection definition entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "test_connection_definition_updated_by",
+            "properties": {
+              "description": "User who last updated the test connection definition entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "test_connection_definition_deleted",
+            "properties": {
+              "description": "Flag indicating whether the test connection definition entity is deleted."
+            }
+          },
+          {
+            "name": "fullyQualifiedName",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "test_connection_definition_fqn",
+            "properties": {
+              "description": "Fully qualified name of the test connection definition."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "test_connection_definition_name_hash",
+            "properties": {
+              "description": "Hashed value of the test connection definition's name for uniqueness."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "test_connection_definition_name",
+            "properties": {
+              "description": "The name of the test connection definition."
+            }
+          }
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "user_entity",
+        "properties": {
+          "description": "Stores metadata about users, including unique identifiers, names, emails, and associated JSON metadata."
+        },
+        "refSql": "select * from user_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "user_id",
+            "properties": {
+              "description": "Unique identifier for the user entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "user_name",
+            "properties": {
+              "description": "The name of the user."
+            }
+          },
+          {
+            "name": "email",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "user_email",
+            "properties": {
+              "description": "The email address of the user."
+            }
+          },
+          {
+            "name": "deactivated",
+            "type": "VARCHAR(8)",
+            "notNull": false,
+            "expression": "user_deactivated",
+            "properties": {
+              "description": "Indicates if the user is deactivated."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "user_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the user entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "user_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the user entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "user_updated_by",
+            "properties": {
+              "description": "User who last updated this user entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "user_deleted",
+            "properties": {
+              "description": "Flag indicating whether the user entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "user_name_hash",
+            "properties": {
+              "description": "Hashed value of the user's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id",
+        "uniqueKeys": [
+          {
+            "name": "email",
+            "columns": ["email"]
+          },
+          {
+            "name": "nameHash",
+            "columns": ["nameHash"]
+          }
+        ]
+      },
+      {
+        "name": "role_entity",
+        "properties": {
+          "description": "Stores metadata about roles, including unique identifiers, names, and associated JSON metadata."
+        },
+        "refSql": "select * from role_entity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(36)",
+            "notNull": true,
+            "expression": "role_id",
+            "properties": {
+              "description": "Unique identifier for the role entity."
+            }
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "role_name",
+            "properties": {
+              "description": "The name of the role."
+            }
+          },
+          {
+            "name": "json",
+            "type": "JSON",
+            "notNull": true,
+            "expression": "role_metadata",
+            "properties": {
+              "description": "JSON data containing all metadata related to the role entity."
+            }
+          },
+          {
+            "name": "updatedAt",
+            "type": "BIGINT UNSIGNED",
+            "notNull": true,
+            "expression": "role_updated_at",
+            "properties": {
+              "description": "Timestamp of the last update to the role entity."
+            }
+          },
+          {
+            "name": "updatedBy",
+            "type": "VARCHAR(256)",
+            "notNull": true,
+            "expression": "role_updated_by",
+            "properties": {
+              "description": "User who last updated this role entity."
+            }
+          },
+          {
+            "name": "deleted",
+            "type": "TINYINT(1)",
+            "notNull": false,
+            "expression": "role_deleted",
+            "properties": {
+              "description": "Flag indicating whether the role entity is deleted."
+            }
+          },
+          {
+            "name": "nameHash",
+            "type": "VARCHAR(256)",
+            "notNull": false,
+            "expression": "role_name_hash",
+            "properties": {
+              "description": "Hashed value of the role's name for uniqueness."
+            }
+          }
+        ],
+        "primaryKey": "id",
+        "uniqueKeys": [
+          {
+            "name": "nameHash",
+            "columns": ["nameHash"]
+          }
+        ]
+      }
+    ]
+  }
+  
