@@ -1870,7 +1870,7 @@
             "notNull": false,
             "expression": "tag_usage_target_fqn_hash",
             "properties": {
-              "description": "Hashed value of the target entity's fully qualified name for uniqueness."
+              "description": "Hashed value of the target entity's fully qualified name for uniqueness. This column should be used to determince the target entity on which tag is applied to."
             }
           }
         ],

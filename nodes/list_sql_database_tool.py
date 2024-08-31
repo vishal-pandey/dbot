@@ -12,6 +12,6 @@ def list_sql_database_tool(state: State):
     state["tables"] = getListOfAllTables()
     op = getListOfTables(state["question"])
     state["relevant_tables"] = ", ".join(op["tables"])
-    state["relevant_tables_schemas"] = op["schemas"]
+    state["relevant_tables_schemas"] = str(op["schemas"])
     state["relevant_tables_relationships"] = str(getRelationshipsForTables(op["tables"]))
     return state

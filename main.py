@@ -3,6 +3,7 @@ from State import State
 from langchain_core.messages import HumanMessage, SystemMessage
 import chainlit as cl
 import random
+from prompts.prompt_ai import get_prompt_ai
 
 config = {"configurable": {"thread_id": "4"}}
 
@@ -12,6 +13,7 @@ if __name__ == "__main__":
 
 
 inputs:State = {}
+
 
 
 @cl.on_chat_start
@@ -24,7 +26,14 @@ async def main(message: cl.Message):
 
     final_answer = await cl.Message(content="").send()
 
+    f = 0
     inputs["question"] = message.content
+    if f == 0:
+        f = 1
+        inputs["messages"] = [get_prompt_ai(question=message.content), HumanMessage(content=message.content)]
+    else:
+        inputs["messages"] = [HumanMessage(content=message.content)]
+
 
     async for event in Graph.astream_events(inputs, config, stream_mode="values", version="v2"):
         if event["event"] == "on_chat_model_stream" and event["name"] == "ChatOpenAI" and event["metadata"]["langgraph_node"] != "generate_sql_query_tool":

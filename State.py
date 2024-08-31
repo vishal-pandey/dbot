@@ -11,15 +11,15 @@ class State(TypedDict):
     db = db
 
     question: str
-    sql_query: str
+    # sql_query: str
     tables: str
     relevant_tables: str
     relevant_tables_schemas: str
     relevant_tables_relationships: str
-    relevant_tables_sample_data: str
-    query_error: str
-    retry_count: int
+    # relevant_tables_sample_data: str
+    # query_error: str
+    # retry_count: int
 
-    query_result: str
-    final_answer: str
+    # query_result: str
+    # final_answer: str
     messages: Annotated[list[AnyMessage], add_messages]

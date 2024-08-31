@@ -59,3 +59,11 @@ def getRelationshipsForTables(tables):
             relationships.append(rel)
     
     return str(relationships)
+
+def getShcemaForTables(tables):
+    schemas = []
+    for table in tables:
+        for t in dbinfo["tables"]:
+            if t['name'] == table:
+                schemas.append(t)
+    return str(schemas)
