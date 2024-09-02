@@ -1,0 +1,14 @@
+Question : 
+Provide me the sample data of any table named "institution_reports"
+
+Answer : 
+To answer this question you you need to find the id of the table from the table_entity table
+
+example query: 
+    select id from table_entity where JSON_UNQUOTE(JSON_EXTRACT(json, "$.name")) = "institution_reports"
+
+further to get the sample data you need to query the table entity_extension where id is table id fetched from the above query and jsonSchema is tableData
+the json column of this table contains the sample data.
+
+example query:
+    select JSON_UNQUOTE((JSON_EXTRACT(json, "$.rows"))) from entity_extension where id = (select id from table_entity where JSON_UNQUOTE(JSON_EXTRACT(json, "$.name")) = "institution_reports") and jsonSchema = "tableData"

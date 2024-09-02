@@ -40,9 +40,13 @@ def get_prompt_ai(question:str):
         in queries where order by is applied on numerical columns make abs function on the column to avoid the negative values in the order by clause.
 
         Please be more descriptive about the answer you are providing to the user. Give extra informations that might be relevent for the question.
+        Please call the elastic_search tool to get the info about the entity if you do not get the answer from the database. It will give you the info about it
         <important>
-                              It is mandatory to call the schema_fetch tool before creating the sql query, to make effective query to answer the question.
+                              It is mandatory to call the relationship_fetch and then schema_fetch tool before creating the sql query, to make effective query to answer the question.
         </important>
+        if schema_fetch give the empty result, please use elastic_search to get the more info about the entity.
+                              
+        entity_extension table contains the metadata about the entity, to get more information about the metadata obout the asked entity use this table. there is json column in it which contains all the metadata about the entity in question, the re
         """)
     return prompt_ai
 

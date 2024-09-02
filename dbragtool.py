@@ -67,3 +67,5 @@ def getShcemaForTables(tables):
             if t['name'] == table:
                 schemas.append(t)
     return str(schemas)
+
+getRelationshipsForTables("table_entity, tag, tag_usage")

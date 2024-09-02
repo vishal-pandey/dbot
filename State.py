@@ -22,4 +22,5 @@ class State(TypedDict):
 
     # query_result: str
     # final_answer: str
+    temp_messages: Annotated[list[AnyMessage], add_messages]
     messages: Annotated[list[AnyMessage], add_messages]

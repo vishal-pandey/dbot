@@ -25,6 +25,7 @@ from langchain_core.callbacks import (
 
 from toolkits.ElasticSearchTool import ElasticSearchTool
 from toolkits.SchemaFetchTool import SchemaFetchTool
+from toolkits.RelationshipFetchTool import RelationshipFetchTool
 
 class BaseSQLDatabaseTool(BaseModel):
     """Base tool for interacting with a SQL database."""
@@ -76,7 +77,6 @@ class InfoSQLDatabaseTool(BaseSQLDatabaseTool, BaseTool):
     name: str = "sql_db_schema"
     description: str = "Get the schema and sample rows for the specified SQL tables."
     args_schema: Type[BaseModel] = _InfoSQLDatabaseToolInput
-    state: State = Field(exclude=True)
 
     def _run(
         self,
@@ -105,7 +105,6 @@ class SQLDatabaseToolkit(BaseToolkit):
 
     db: SQLDatabase = Field(exclude=True)
     llm: BaseLanguageModel = Field(exclude=True)
-    state: State = Field(exclude=True)
 
     @property
     def dialect(self) -> str:
@@ -128,7 +127,7 @@ class SQLDatabaseToolkit(BaseToolkit):
             "Example Input: table1, table2, table3"
         )
         info_sql_database_tool = InfoSQLDatabaseTool(
-            db=self.db, description=info_sql_database_tool_description, state = self.state
+            db=self.db, description=info_sql_database_tool_description
         )
         query_sql_database_tool_description = (
             "Input to this tool is a detailed and correct SQL query, output is a "
@@ -154,6 +153,7 @@ class SQLDatabaseToolkit(BaseToolkit):
         # Custom Tools below
         elastic_search_tool = ElasticSearchTool(db=self.db)
         schema_fetch_tool = SchemaFetchTool(db=self.db)
+        relationship_fetch_tool = RelationshipFetchTool(db=self.db)
 
 
         return [
@@ -162,7 +162,20 @@ class SQLDatabaseToolkit(BaseToolkit):
             list_sql_database_tool,
             query_sql_checker_tool,
             elastic_search_tool,
-            schema_fetch_tool
+            schema_fetch_tool,
+            relationship_fetch_tool
+        ]
+
+
+    def get_less_tools(self) -> List[BaseTool]:
+        list_sql_database_tool = ListSQLDatabaseTool(db=self.db)
+        schema_fetch_tool = SchemaFetchTool(db=self.db)
+        relationship_fetch_tool = RelationshipFetchTool(db=self.db)
+
+        return [
+            list_sql_database_tool,
+            schema_fetch_tool,
+            relationship_fetch_tool
         ]
 
 

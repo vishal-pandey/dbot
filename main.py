@@ -4,6 +4,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 import chainlit as cl
 import random
 from prompts.prompt_ai import get_prompt_ai
+from prompts.prompt_info_db import get_prompt_info_db
 
 config = {"configurable": {"thread_id": "4"}}
 
@@ -31,6 +32,7 @@ async def main(message: cl.Message):
     if f == 0:
         f = 1
         inputs["messages"] = [get_prompt_ai(question=message.content), HumanMessage(content=message.content)]
+        # inputs["temp_messages"] = [get_prompt_info_db(message.content)]
     else:
         inputs["messages"] = [HumanMessage(content=message.content)]
 

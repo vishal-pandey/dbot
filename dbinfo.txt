@@ -1,0 +1,175 @@
+
+Here’s an overview of the relationships between the tables classification, tag, tag_usage, glossary_entity, and glossary_term_entity and their connections with other tables in the openmetadata database:
+
+1. Classification
+Description: The classification table stores metadata about different classifications used within the system. These classifications are used to group tags and glossary terms under meaningful categories like "Confidential", "PII", "Sensitive", etc.
+Relationships:
+tag: Tags can belong to a classification, meaning each tag can be associated with one or more classifications. This creates a hierarchical structure where classifications are used to organize tags.
+glossary_term_entity: Glossary terms may also be categorized under classifications. This helps in structuring the glossary terms into logical categories.
+Other Tables: Classifications might indirectly influence entities like table_entity, database_entity, etc., where tags and glossary terms are applied.
+2. Tag
+Description: The tag table stores metadata about tags. Tags are keywords or labels that can be applied to various metadata entities (e.g., tables, columns, dashboards) to provide additional context or classification.
+Relationships:
+classification: Tags are often grouped under classifications. A tag can belong to one or more classifications, defining its role or sensitivity level within the metadata system.
+tag_usage: The tag_usage table tracks where and how tags are used across the system, linking tags to specific metadata entities (e.g., tables, columns).
+Other Tables: Tags are applied to entities such as table_entity, database_entity, dashboard_entity, pipeline_entity, etc., to categorize or describe these entities.
+3. Tag Usage
+Description: The tag_usage table tracks the usage of tags across different metadata entities. It records which tags are applied to which entities, the type of label used (e.g., primary or secondary), and the state of the tag usage.
+Relationships:
+tag: tag_usage directly references tags, indicating how they are applied across the system.
+Other Tables: tag_usage creates links to various metadata entities (e.g., table_entity, dashboard_entity, pipeline_entity, column_entity) by associating these entities with specific tags.
+4. Glossary Entity
+Description: The glossary_entity table stores metadata about glossaries. A glossary is a collection of terms that have specific meanings within the context of the metadata system. Glossaries are used to ensure consistent use of terminology across the organization.
+Relationships:
+glossary_term_entity: The glossary_entity table is the parent of the glossary_term_entity table. Each glossary can contain multiple glossary terms that define specific concepts or terms used in the metadata system.
+Other Tables: Glossaries might be referenced indirectly through glossary terms when these terms are applied to entities such as table_entity, column_entity, or dashboard_entity.
+5. Glossary Term Entity
+Description: The glossary_term_entity table stores metadata about individual glossary terms. A glossary term defines a specific concept or item that is part of a larger glossary.
+Relationships:
+glossary_entity: Glossary terms belong to a glossary, linking them back to their parent glossary.
+classification: Glossary terms can be classified under different classifications, similar to tags. This allows for the organization of glossary terms under categories such as "Confidential", "PII", etc.
+Other Tables: Glossary terms can be applied to various metadata entities (e.g., table_entity, column_entity, dashboard_entity) to define or describe the data within these entities. They help in maintaining consistent terminology across the metadata system.
+Relationships with Other Tables in the Database:
+Metadata Entities: The tags and glossary terms are primarily used in the context of metadata entities like table_entity, database_entity, dashboard_entity, pipeline_entity, etc. They are applied to these entities to provide additional context, classification, or description.
+Search and Discovery: Tags and glossary terms play a crucial role in search and discovery within the metadata system. They enable users to find and filter entities based on specific keywords or terms.
+Security and Compliance: Classifications (linked with tags and glossary terms) help enforce security and compliance policies. For example, data classified as "Confidential" may be subject to different access controls.
+Example Scenarios:
+Tagging a Table: A table_entity might be tagged with a tag classified under "Sensitive". This relationship would be reflected in the tag_usage table, linking the table's fully qualified name with the tag.
+Applying a Glossary Term: A column in a table could be associated with a glossary term (e.g., "Customer ID"), ensuring that all instances of that column across different tables have a consistent definition.
+Classifying Data: A tag such as "PII" (Personally Identifiable Information) could be classified under "Confidential". When applied to an entity, this classification could trigger specific compliance checks or access restrictions.
+These relationships help in maintaining a well-organized, secure, and compliant metadata environment, making it easier to manage and discover data across the organization.
+
+
+
+
+Relationships Between test_case, test_definition, test_suite, and test_connection_definition
+Overview:
+These tables are part of the testing framework within the OpenMetadata system. They store information related to test cases, their definitions, test suites, and connections required to run the tests. Here's how they relate to each other and other tables in the database:
+
+1. test_case
+Description: Stores information about individual test cases, including their metadata, the entity they are associated with, and the test definition they are based on.
+Relationships:
+test_definition: Each test_case is associated with a test_definition, which defines what the test is supposed to validate. This relationship is crucial for understanding the purpose of a test case.
+test_suite: A test_case can belong to a test_suite, grouping it with other related test cases that should be run together.
+Other Tables: The entityFQN in test_case links to various metadata entities (e.g., table_entity, dashboard_entity) to specify what the test case is validating.
+2. test_definition
+Description: Contains the definitions for tests, detailing what they validate and the type of data they operate on.
+Relationships:
+test_case: A test_definition can be linked to multiple test_case entries, as it defines the test logic that is applied to different entities.
+test_suite: A test_suite might reference multiple test_definition entries to define the scope of the suite.
+Other Tables: entityType in test_definition can reference different entity types in the database (e.g., table_entity, column_entity), indicating what kind of metadata entities the test applies to.
+3. test_suite
+Description: Represents a collection of test cases that should be run together. It groups related tests to ensure comprehensive validation of specific aspects of the system.
+Relationships:
+test_case: A test_suite consists of multiple test_case entries, forming a group of tests that are related or need to be executed together.
+test_definition: A test_suite can be associated with multiple test_definition entries, determining the types of tests included in the suite.
+Other Tables: Indirectly related to entities that test_case and test_definition are associated with.
+4. test_connection_definition
+Description: Stores connection details required to execute tests. These connections might be specific to certain test cases or suites that need to connect to specific databases or services to retrieve data for validation.
+Relationships:
+test_case: A test_case might reference a test_connection_definition if it needs specific connection details to be executed.
+Other Tables: The fullyQualifiedName in test_connection_definition might reference specific services or data sources that the connection is targeting.
+
+
+
+
+Detailed Relationships:
+dbservice_entity -> database_entity:
+
+Relationship: One dbservice_entity can manage multiple database_entity entries, linking databases to the service responsible for managing them.
+dashboard_service_entity -> dashboard_entity:
+
+Relationship: One dashboard_service_entity can manage multiple dashboard_entity entries, linking dashboards to the service responsible for managing them.
+pipeline_service_entity -> pipeline_entity:
+
+Relationship: One pipeline_service_entity can manage multiple pipeline_entity entries, linking pipelines to the service responsible for managing them.
+messaging_service_entity -> topic_entity:
+
+Relationship: One messaging_service_entity can manage multiple topic_entity entries, linking topics to the messaging service responsible for managing them.
+storage_service_entity -> storage_container_entity:
+
+Relationship: One storage_service_entity can manage multiple storage_container_entity entries, linking storage containers to the service responsible for managing them.
+mlmodel_service_entity -> ml_model_entity:
+
+Relationship: One mlmodel_service_entity can manage multiple ml_model_entity entries, linking machine learning models to the service responsible for managing them.
+metadata_service_entity -> table_entity:
+
+Relationship: One metadata_service_entity can manage multiple table_entity entries, linking tables to the metadata service responsible for managing them.
+
+
+
+entity_relationship:
+
+Core Role: This table is pivotal for defining relationships between different entities within the OpenMetadata system.
+Relationships:
+With Self: entity_relationship can relate one entity to another through fromId and toId. The relation column further defines the type of relationship (e.g., parent-child, dependency, etc.).
+With Various Entities: The fromId in entity_relationship can link to the id of numerous tables like database_entity, table_entity, dashboard_entity, pipeline_entity, user_entity, role_entity, etc., establishing a comprehensive network of entity relationships.
+entity_extension:
+
+Core Role: Allows for the extension of metadata entities with additional attributes or custom information.
+Relationships:
+With Metadata Entities: The id in entity_extension links to the id of tables like database_entity, table_entity, dashboard_entity, pipeline_entity, ml_model_entity, etc., enabling these entities to be extended with additional metadata.
+entity_extension_time_series:
+
+Core Role: Tracks the time-series data related to the extensions applied to entities, capturing how these extensions evolve over time.
+Relationships:
+With entity_extension: The entityFQNHash in entity_extension_time_series links to id in entity_extension, tracking time-series data for each extension.
+With Metadata Entities: The entityFQNHash in entity_extension_time_series links to the fqnHash in tables like table_entity, database_entity, dashboard_entity, pipeline_entity, ml_model_entity, etc., allowing for detailed time-series tracking of changes to entity metadata.
+
+
+database_entity:
+
+Relationships:
+With table_entity: A database can contain multiple tables.
+With entity_relationship: Database entities can have relationships with other entities, such as relationships between databases or connections to other resources.
+With entity_extension and entity_extension_time_series: Database entities can have extended metadata and track changes over time.
+table_entity:
+
+Relationships:
+With database_entity: Each table belongs to a specific database.
+With entity_relationship: Table entities can have relationships with other tables, columns, or related entities.
+With entity_extension and entity_extension_time_series: Table entities can have extended metadata and track changes over time.
+dashboard_entity:
+
+Relationships:
+With entity_relationship: Dashboard entities can have relationships with other dashboards, data sources, or related entities.
+With entity_extension and entity_extension_time_series: Dashboard entities can have extended metadata and track changes over time.
+pipeline_entity:
+
+Relationships:
+With entity_relationship: Pipeline entities can have relationships with other pipelines, tables, or related entities.
+With entity_extension and entity_extension_time_series: Pipeline entities can have extended metadata and track changes over time.
+data_product_entity:
+
+Relationships:
+With entity_relationship: Data product entities can have relationships with databases, tables, or related entities.
+With entity_extension and entity_extension_time_series: Data product entities can have extended metadata and track changes over time.
+domain_entity:
+
+Relationships:
+With entity_relationship: Domain entities can have relationships with other domains, databases, or related entities.
+With entity_extension and entity_extension_time_series: Domain entities can have extended metadata and track changes over time.
+storage_container_entity:
+
+Relationships:
+With entity_relationship: Storage container entities can have relationships with other storage containers or related entities.
+With entity_extension and entity_extension_time_series: Storage container entities can have extended metadata and track changes over time.
+report_entity:
+
+Relationships:
+With entity_relationship: Report entities can have relationships with other reports, dashboards, or related entities.
+With entity_extension and entity_extension_time_series: Report entities can have extended metadata and track changes over time.
+topic_entity:
+
+Relationships:
+With entity_relationship: Topic entities can have relationships with other topics, messaging services, or related entities.
+With entity_extension and entity_extension_time_series: Topic entities can have extended metadata and track changes over time.
+
+
+Explanation:
+fromTable: The table from which the relationship originates.
+columns: The column(s) in the fromTable that are involved in the relationship.
+toTable: The table to which the relationship points.
+relatedColumns: The column(s) in the toTable that are involved in the relationship.
+relationshipType: The type of relationship (e.g., one-to-many, many-to-one).
+description: A brief description of the relationship.
